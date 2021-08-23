@@ -20,6 +20,15 @@
       "es2018",
       "dom"
     ]
+
+    /* Para não ter que ficar dando ".." para ficar procurando diretorios
+    /*,
+
+    "paths": {
+      "@app/*": ["src/app/*"],
+      "@environments/*": ["src/environments/*"]
+    }
+    */
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
