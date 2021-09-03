@@ -18,6 +18,7 @@ export class EventoListaComponent implements OnInit {
 
   public eventos: Evento[] = [];
   public eventosFiltrados:any [] = [];
+  public eventoId = 0;
 
 
   public larguraImgem: number = 100; /* Property binding */
@@ -54,8 +55,7 @@ export class EventoListaComponent implements OnInit {
 
   ngOnInit(): void {
     this.spinner.show();
-
-    this.getEventos(); //Iniciar os eventos na tela
+    this.carregarEventos(); //Iniciar os eventos na tela
 
 
   }
@@ -65,7 +65,7 @@ export class EventoListaComponent implements OnInit {
   }
 
   /*Metodo de conexão com a api*/
-  public getEventos(): void {
+  public carregarEventos(): void {
     this.eventoService.getEventos().subscribe({
       next: (eventos: Evento[]) => {
         this.eventos = eventos;
@@ -82,13 +82,33 @@ export class EventoListaComponent implements OnInit {
 
 
     //Evento de excluir
-    openModal(template: TemplateRef<any>): void {
+    openModal(event: any, template: TemplateRef<any>, eventoId: number): void {
+      event.stopPropagation();
+      this.eventoId = eventoId;
       this.modalRef = this.modalService.show(template, {class: 'modal-sm'});
     }
 
     confirm(): void {
-      this.toastr.success('O evento foi deletado com sucesso!', 'Deletado!');
       this.modalRef.hide();
+      this.spinner.show();
+
+      this.eventoService.deleteEvento(this.eventoId).subscribe(
+        (result: any) => {
+          //if(result === 'Deletado'){ por conta do any, não preciso verificar a string
+            this.toastr.success('O evento foi deletado com sucesso!', 'Deletado!');
+            this.spinner.hide();
+            this.carregarEventos();
+         // }
+        },
+        (error: any) => {
+          console.error(error);
+          this.toastr.error(`Erro ao deletar evento ${this.eventoId}.`, 'Erro');
+          this.spinner.hide();
+        },
+        () => this.spinner.hide(),
+      );
+
+
     }
 
     decline(): void {

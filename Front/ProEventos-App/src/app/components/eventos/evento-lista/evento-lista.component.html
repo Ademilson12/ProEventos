@@ -54,7 +54,7 @@
       <tr *ngFor="let evento of eventosFiltrados" (click)="detalheEvento(evento.id)" style="cursor: pointer;">
         <!--Diretiva estrutural para fazer vários binding -->
         <td class="d-none d-md-table-cell">
-          <img [collapse]="!exibirImagem" [isAnimated]="true" src="/assets/{{evento.imagemUrl}}"
+          <img [collapse]="!exibirImagem" [isAnimated]="true" src="/assets/{{evento.imagemURL}}"
             [style.width.px]="larguraImgem" [style.margin.px]="margemImgem">
         </td>
         <!--Property binding-->
@@ -64,14 +64,14 @@
         <td class="d-none d-md-table-cell">{{evento.local}}</td>
         <td>{{evento.dataEvento | DateFormatPipe}}</td>
         <td class="d-none d-md-table-cell">{{evento.qtdPessoas}}</td>
-        <td class="d-none d-md-table-cell">{{evento.lotes[0].nome}}</td>
+        <td class="d-none d-md-table-cell">{{evento.lotes[0]?.nome}}</td>
         <td>
           <!--
           <button type="button" class="btn btn-primary btn-sm mr-2" tooltip="Editar">
             <i class="fa fa-edit"></i>
           </button>
         -->
-          <button type="button" class="btn btn-danger btn-lg" tooltip="Excluir" (click)="openModal(template)">
+          <button type="button" class="btn btn-danger btn-lg" tooltip="Excluir" (click)="openModal($event, template, evento.id)">
             <i class="fa fa-trash"></i>
           </button>
         </td>
@@ -91,7 +91,7 @@
 
 <ng-template #template>
   <div class="modal-body text-center">
-    <p>Tem certeza que quer deletar este Evento?</p>
+    <p>Tem certeza que quer deletar o Evento {{this.eventoId}}?</p>
     <button type="button" class="btn btn-default" (click)="confirm()">Sim</button>
     <button type="button" class="btn btn-primary" (click)="decline()">Não</button>
   </div>
